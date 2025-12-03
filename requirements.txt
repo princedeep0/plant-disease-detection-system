@@ -6,4 +6,4 @@ numpy==1.26.4
 Pillow==12.0.0
 h5py==3.10.0
 Werkzeug==3.0.2
-protobuf==4.25.3
+# protobuf line removed – TensorFlow will install a compatible version itself
