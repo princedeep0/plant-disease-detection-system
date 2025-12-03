@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Prediction Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top, #4ade80, #166534);
+            padding: 16px;
+            color: #0f172a;
+        }
+        .card {
+            max-width: 720px;
+            width: 100%;
+            background: #f9fafb;
+            border-radius: 20px;
+            padding: 24px 22px 16px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
+        }
+        .pill {
+            display: inline-flex;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            background: rgba(22, 163, 74, 0.15);
+            color: #15803d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        h1 { font-size: 1.5rem; font-weight: 700; color: #14532d; margin-bottom: 4px; }
+        .disease-name { font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 10px; }
+        .confidence { font-size: 0.9rem; color: #6b7280; margin-bottom: 16px; }
+        .section-title { font-size: 0.95rem; font-weight: 600; color: #374151; margin-bottom: 4px; margin-top: 8px; }
+        p { font-size: 0.9rem; color: #4b5563; line-height: 1.45; }
+        ul { margin-top: 4px; margin-left: 18px; font-size: 0.88rem; color: #4b5563; }
+        li { margin-bottom: 3px; }
+        .row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+        .col { flex: 1 1 260px; }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .btn {
+            padding: 9px 14px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #22c55e, #16a34a);
+            color: #f9fafb;
+            box-shadow: 0 10px 18px rgba(22, 163, 74, 0.4);
+        }
+        .btn-primary:hover { opacity: 0.95; }
+        .meta { font-size: 0.8rem; color: #9ca3af; margin-top: 6px; }
+        footer { margin-top: 14px; text-align: center; font-size: 0.8rem; color: #9ca3af; }
+        footer span { font-weight: 600; color: #16a34a; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="pill">Prediction Result</div>
+
+        <h1>Detected Disease</h1>
+        <div class="disease-name">{{ info.name }}</div>
+
+        {% if confidence > 0 %}
+            <div class="confidence">
+                Confidence: {{ '%.1f'|format(confidence * 100) }}%
+            </div>
+        {% else %}
+            <div class="confidence">
+                Confidence: not available (model was not sure)
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col">
+                <div class="section-title">Description</div>
+                <p>{{ info.description }}</p>
+            </div>
+            <div class="col">
+                <div class="section-title">Suggested Treatment</div>
+                <ul>
+                    {% for line in info.treatment %}
+                        <li>{{ line }}</li>
+                    {% endfor %}
+                </ul>
+
+                {% if info.fertilizer %}
+                    <div class="section-title" style="margin-top:10px;">Fertilizer Advice</div>
+                    <ul>
+                        {% for line in info.fertilizer %}
+                            <li>{{ line }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top:12px;">Model details (for you)</div>
+        <p class="meta">
+            Raw label: <strong>{{ label }}</strong><br/>
+            {% if top_preds %}Top predictions:{% endif %}
+        </p>
+        <ul class="meta">
+            {% for p in top_preds %}
+                <li>{{ p.label }} – {{ '%.1f'|format(p.confidence * 100) }}%</li>
+            {% endfor %}
+        </ul>
+
+        <div class="actions">
+            <form action="/" method="get">
+                <button class="btn btn-primary" type="submit">
+                    Check another leaf
+                </button>
+            </form>
+        </div>
+
+        <footer>
+            Built by <span>Prince Deep</span>
+        </footer>
+    </div>
+</body>
+</html>
