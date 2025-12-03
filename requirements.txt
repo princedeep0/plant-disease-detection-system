@@ -4,6 +4,5 @@ gunicorn==21.2.0
 tensorflow==2.20.0
 numpy==1.26.4
 Pillow==12.0.0
-h5py==3.10.0
+h5py==3.11.0
 Werkzeug==3.0.2
-# protobuf line removed – TensorFlow will install a compatible version itself
